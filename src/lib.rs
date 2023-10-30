@@ -248,11 +248,11 @@ impl Sqids {
 
 	fn shuffle(alphabet: &[char]) -> Vec<char> {
 		let mut chars: Vec<char> = alphabet.to_vec();
-
-		for i in 0..(chars.len() - 1) {
-			let j = chars.len() - 1 - i;
-			let r = (i as u32 * j as u32 + chars[i] as u32 + chars[j] as u32) % chars.len() as u32;
-			chars.swap(i, r as usize);
+      //将字符串数组转为向量
+		for i in 0..(chars.len() - 1) { //从0开始到n-1循环
+			let j = chars.len() - 1 - i; //取n-1,n-2,
+			let r = (i as u32 * j as u32 + chars[i] as u32 + chars[j] as u32) % chars.len() as u32;//计算一个洗牌位置 (i * (n - 1 -i) + int32(chars[i]) + int32(chars[j])) % n
+			chars.swap(i, r as usize); //将这两个位置上的数据进行换位
 		}
 
 		chars
