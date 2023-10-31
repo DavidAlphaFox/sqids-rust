@@ -122,21 +122,21 @@ impl Sqids {
 		self.encode_numbers(numbers, 0)
 	}
 
-	pub fn decode(&self, id: &str) -> Vec<u64> {
-		let mut ret = Vec::new();
+	pub fn decode(&self, id: &str) -> vec<u64> {
+		let mut ret = vec::new();
 
 		if id.is_empty() {
 			return ret;
 		}
 
-		let alphabet_chars: HashSet<char> = self.alphabet.iter().cloned().collect();
+		let alphabet_chars: hashset<char> = self.alphabet.iter().cloned().collect();
 		if !id.chars().all(|c| alphabet_chars.contains(&c)) {
 			return ret;
 		}
 
 		let prefix = id.chars().next().unwrap();
 		let offset = self.alphabet.iter().position(|&c| c == prefix).unwrap();
-		let mut alphabet: Vec<char> =
+		let mut alphabet: vec<char> =
 			self.alphabet.iter().cycle().skip(offset).take(self.alphabet.len()).copied().collect();
 
 		alphabet = alphabet.into_iter().rev().collect();
@@ -146,18 +146,18 @@ impl Sqids {
 		while !id.is_empty() {
 			let separator = alphabet[0];
 
-			let chunks: Vec<&str> = id.split(separator).collect();
+			let chunks: vec<&str> = id.split(separator).collect();
 			if !chunks.is_empty() {
 				if chunks[0].is_empty() {
 					return ret;
 				}
 
-				let alphabet_without_separator: Vec<char> =
+				let alphabet_without_separator: vec<char> =
 					alphabet.iter().copied().skip(1).collect();
 				ret.push(self.to_number(chunks[0], &alphabet_without_separator));
 
 				if chunks.len() > 1 {
-					alphabet = Self::shuffle(&alphabet);
+					alphabet = self::shuffle(&alphabet);
 				}
 			}
 
