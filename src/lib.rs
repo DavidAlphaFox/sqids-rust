@@ -169,18 +169,18 @@ impl Sqids {
 
 	fn encode_numbers(&self, numbers: &[u64], increment: usize) -> Result<String> {
 		if increment > self.alphabet.len() {
-			return Err(Error::BlocklistMaxAttempts);
+			return Err(Error::BlocklistMaxAttempts); //如果increment已经大于了字符表，那就需要报错
 		}
 
 		let mut offset = numbers.iter().enumerate().fold(numbers.len(), |a, (i, &v)| {
-			self.alphabet[v as usize % self.alphabet.len()] as usize + i + a
+			self.alphabet[v as usize % self.alphabet.len()] as usize + i + a // a + i + alphabet[v % len(alphabet)]
 		}) % self.alphabet.len();
-
-		offset = (offset + increment) % self.alphabet.len();
-
+    //计算offset,acc是id数量的长度
+		offset = (offset + increment) % self.alphabet.len(); //最终offset的值
+    
 		let mut alphabet: Vec<char> =
 			self.alphabet.iter().cycle().skip(offset).take(self.alphabet.len()).copied().collect();
-
+      //循环alphabet，跳过offset，然后再取len(alphabet),在offset处，前后颠倒
 		let prefix = alphabet[0];
 
 		alphabet = alphabet.into_iter().rev().collect();
