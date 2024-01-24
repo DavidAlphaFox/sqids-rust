@@ -145,7 +145,6 @@ impl Sqids {
 
 		while !id.is_empty() {
 			let separator = alphabet[0];
-
 			let chunks: Vec<&str> = id.split(separator).collect(); //如果存在多个numbers编码后的ID，那么就存在多个chunk
 			if !chunks.is_empty() {
 				if chunks[0].is_empty() {
@@ -158,6 +157,7 @@ impl Sqids {
 
 				if chunks.len() > 1 {
 					alphabet = Self::shuffle(&alphabet); //对字符表进行洗牌
+
 				}
 			}
 
@@ -171,19 +171,22 @@ impl Sqids {
 	fn encode_numbers(&self, numbers: &[u64], increment: usize) -> Result<String> {
 		if increment > self.alphabet.len() { //步进不能大于整个字符表
 			return Err(Error::BlocklistMaxAttempts);
+
 		}
     //将numbers的长度作为初始值
     // v = numbers[i]
     // a = a + i + self.alphabet[v % self.alphabet.len()]
 		let mut offset = numbers.iter().enumerate().fold(numbers.len(), |a, (i, &v)| {
-			self.alphabet[v as usize % self.alphabet.len()] as usize + i + a
+			self.alphabet[v as usize % self.alphabet.len()] as usize + i + a // a + i + alphabet[v % len(alphabet)]
 		}) % self.alphabet.len();
+
     //计算出最终的offset
 		offset = (offset + increment) % self.alphabet.len();
     //在offset这个位置将整个alphabet进行前后调换
 		let mut alphabet: Vec<char> =
 			self.alphabet.iter().cycle().skip(offset).take(self.alphabet.len()).copied().collect();
     //取出字符表第一个字符，作为前缀字符，放在生成的ID的最前面，用来作ID首字符
+
 		let prefix = alphabet[0];
     //将整个字符表进行逆转
 		alphabet = alphabet.into_iter().rev().collect();
@@ -258,6 +261,7 @@ impl Sqids {
 			let j = chars.len() - 1 - i; // 反向取vec中对应位置 i = 1 j = n-2
 			let r = (i as u32 * j as u32 + chars[i] as u32 + chars[j] as u32) % chars.len() as u32; //计算出一个新的位置
 			chars.swap(i, r as usize); //将chars[i]换成chars[r]的位置进行互换
+
 		}
 
 		chars
